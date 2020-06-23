@@ -1,0 +1,119 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Guild {
+  id                   Int        @default(autoincrement()) @id
+  /// The guild ID
+  guildID              String     @unique
+  /// The role ids that can create events on this guild
+  createRoleIDs        String[]
+  /// The default channel id where event cards are posted
+  defaultCardChannelID String     @unique
+  Reminder             Reminder[]
+  Event                Event[]
+}
+
+model Reminder {
+  id           Int      @default(autoincrement()) @id
+  /// The time when this reminder was created
+  createdAt    DateTime @default(now())
+  /// The channel id of the channel the reminder was created in and will be sent to.
+  channelID    String
+  /// The text the reminder will send.
+  content      String
+  guild        Guild    @relation(fields: [guildID], references: [guildID])
+  /// The guild id where this was created. Useful for getting the guild language.
+  guildID      String
+  /// The unique id(message id) of the reminder. Userful for users deleteing reminders.
+  reminderID   String
+  /// If the reminder is recurring the time interval between reminders.
+  interval     Int
+  /// The timestamp when this reminder will occur next.
+  timestamp    DateTime
+  /// The user id of the person who created this reminder.
+  userID       String
+  /// Whether the reminder will send this with an embed or raw text.
+  embedEnabled Boolean  @default(true)
+
+  @@index([userID])
+}
+
+model Event {
+  id                       Int      @default(autoincrement()) @id
+  /// A custom string spot for the user to write the activity of the event
+  activity                 String
+  /// The channel id where the card will be
+  cardChannelID            String
+  /// The message id of the card
+  cardMessageID            String
+  /// The role ids that are required to join the event. Atleast one is needed to join the event.
+  allowedRoleIDs           String[]
+  /// The role ids that will be @mentioned when the event starts and for reminders.
+  alertRoleIDs             String[]
+  /// The user ids who have marked yes they are attending
+  attendeeIDs              String[]
+  /// The user id of the creator of the event
+  authorID                 String
+  /// The background image url. VIP required.
+  backgroundURL            String
+  /// The timestamp when this event was created.
+  createdAt                DateTime @default(now())
+  /// The user ids who have denied attendance to the events.
+  denialIDs                String[]
+  /// A custom spot for the user to write the description of the event.
+  description              String
+  /// Whether reminders should be sent in DM to all attendees
+  dmReminders              Boolean  @default(true)
+  /// The milliseconds for how long the event will last
+  duration                 Int
+  /// The timestamp for when the event will end
+  endTimestamp             DateTime
+  /// The reminders that have been sent already
+  executedReminders        Int[]
+  /// The eventID for this event on this server.
+  eventID                  Int
+  /// How often this event should repeat
+  frequency                Int
+  /// A custom spot for the user to write the name of the game for the event.
+  game                     String
+  /// The guild where this event is created
+  guild                    Guild    @relation(fields: [guildID], references: [guildID])
+  /// The guild ID where the event is created
+  guildID                  String
+  /// Whether or not the event has started.
+  hasStarted               Boolean
+  /// Whether or not the event should repeat after its over.
+  isRecurring              Boolean  @default(false)
+  /// The maximum amount of users allowed to join
+  maxAttendees             Int      @default(5)
+  /// The user ids for the users who MIGHT be attending.
+  maybeIDs                 String[]
+  /// The amount of time to wait before starting this event upon creation
+  minutesFromNow           Int
+  /// A custom spot for the user to write the platforms for the event.
+  platform                 String
+  /// The reminders that need to be sent
+  reminders                Int[]
+  /// Whether all attendees need to be reset when the event is repeated
+  removeRecurringAttendees Boolean  @default(false)
+  /// The timestamp for when the event will start
+  startTimestamp           DateTime
+  /// If the event is made into a template event then it will be given a name
+  template                 String
+  /// A custom spot for the user to set the title of the event.
+  title                    String
+  /// The user ids of those that want to attend but applied when the event was already full
+  waitingListIDs           String[]
+
+  @@index([id])
+  @@index([id, guildID])
+}
