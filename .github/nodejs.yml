@@ -1,0 +1,50 @@
+name: Lint & Deployment
+
+on: [push]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12.x]
+    env:
+      CI: true
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: echo ${{github.ref}}
+      - name: Install dependencies
+        run: npm install
+      - name: Setup project
+        run: cp config.example.ts config.ts
+      - name: Test TSC
+        run: npm run build
+  deploy:
+    if: github.ref == 'refs/heads/master'
+    needs: lint
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12.x]
+
+    steps:
+      - uses: actions/checkout@v1
+      - uses: webfactory/ssh-agent@v0.1.1
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      - name: Deploy Master
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER}}@${{ secrets.SSH_HOST }} << EOF
+            cd schedule-ai
+            git pull
+            npm ci
+            npm run build
+            pm2 restart schedule-ai
+          EOF
+        env:
+          CI: true
