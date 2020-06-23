@@ -22,8 +22,12 @@
   "homepage": "https://github.com/Skillz4Killz/schedule-ai#readme",
   "dependencies": {
     "@klasa/core": "dirigeants/core#build",
+    "@prisma/client": "^2.1.0",
     "@types/node": "^14.0.13",
     "klasa": "dirigeants/klasa#build",
     "typescript": "^3.9.5"
+  },
+  "devDependencies": {
+    "@prisma/cli": "^2.1.0"
   }
 }
