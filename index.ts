@@ -1,6 +1,9 @@
 import { KlasaClient } from "klasa";
 import config from "./config";
 import { Intents } from "@klasa/ws";
+import { PrismaClient } from "@prisma/client";
+
+export const prisma = new PrismaClient();
 
 const client = new KlasaClient({
   commands: {
