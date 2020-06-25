@@ -5,7 +5,7 @@ import { PrismaClient } from "@prisma/client";
 
 export const prisma = new PrismaClient();
 
-const client = new KlasaClient({
+export const client = new KlasaClient({
   commands: {
     prefix: ".",
     logging: true,

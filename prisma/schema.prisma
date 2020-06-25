@@ -30,7 +30,6 @@ model Reminder {
   channelID    String
   /// The text the reminder will send.
   content      String
-  guild        Guild    @relation(fields: [guildID], references: [guildID])
   /// The guild id where this was created. Useful for getting the guild language.
   guildID      String
   /// The unique id(message id) of the reminder. Userful for users deleteing reminders.
