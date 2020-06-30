@@ -10,19 +10,17 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model Guild {
-  id                   Int        @default(autoincrement()) @id
+model Guilds {
+  id                   Int      @default(autoincrement()) @id
   /// The guild ID
-  guildID              String     @unique
+  guildID              String   @unique
   /// The role ids that can create events on this guild
   createRoleIDs        String[]
   /// The default channel id where event cards are posted
-  defaultCardChannelID String     @unique
-  Reminder             Reminder[]
-  Event                Event[]
+  defaultCardChannelID String   @unique
 }
 
-model Reminder {
+model Reminders {
   id           Int      @default(autoincrement()) @id
   /// The time when this reminder was created
   createdAt    DateTime @default(now())
@@ -46,7 +44,7 @@ model Reminder {
   @@index([userID])
 }
 
-model Event {
+model Events {
   id                       Int      @default(autoincrement()) @id
   /// A custom string spot for the user to write the activity of the event
   activity                 String
@@ -84,8 +82,6 @@ model Event {
   frequency                Int
   /// A custom spot for the user to write the name of the game for the event.
   game                     String
-  /// The guild where this event is created
-  guild                    Guild    @relation(fields: [guildID], references: [guildID])
   /// The guild ID where the event is created
   guildID                  String
   /// Whether or not the event has started.

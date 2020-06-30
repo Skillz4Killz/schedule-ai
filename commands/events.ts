@@ -3,7 +3,7 @@ import { Command } from "klasa";
 import { prisma } from "..";
 import { ChannelType } from "@klasa/dapi-types";
 import { sendErrorResponse, sendMessage } from "../utils/responses";
-import { Event } from "@prisma/client";
+import { Events } from "@prisma/client";
 import { humanizeMilliseconds } from "../utils/transform";
 import { displayAvatarURL } from "../utils/klasa";
 
@@ -13,32 +13,32 @@ export default class extends Command {
 
   async run(message: Message) {
     // Guild ID will be available from the `runIn` prop
-    const events = await prisma.event.findMany({ where: { guildID: message.guild?.id } });
+    const events = await prisma.events.findMany({ where: { guildID: message.guild?.id } });
 
     // If there are no events available
     if (!events.length)
       return sendErrorResponse(
         message.channel.id,
-        "There are no events currently on this server. To create an event, use the eventcreate command."
+        message.language.get("EVENTS_NONE")
       );
 
     this.sendEventList(message, events);
     return message.responses;
   }
 
-  sendEventList(message: Message, events: Event[]) {
+  sendEventList(message: Message, events: Events[]) {
     const embed = new Embed().setAuthor(message.author.tag, displayAvatarURL(message.author));
 
-		// Splice will remove from the events array
-		embed.setDescription(this.listEvents(events.splice(0, 12)));
-		// Sends the message to the user
-		sendMessage(message.channel.id, { embed })
+    // Splice will remove from the events array
+    embed.setDescription(this.listEvents(message, events.splice(0, 12)));
+    // Sends the message to the user
+    sendMessage(message.channel.id, { embed })
 
-		// If anything is left, it will rerun with remaining events
-		if (events.length) this.sendEventList(message, events)
+    // If anything is left, it will rerun with remaining events
+    if (events.length) this.sendEventList(message, events)
   }
 
-  listEvents(events: Event[]) {
+  listEvents(message: Message, events: Events[]) {
     const now = Date.now();
     const sortedEvents = events.sort((a, b) => a.id - b.id).slice(0, 12);
 
@@ -55,11 +55,11 @@ export default class extends Command {
         const end = event.endTimestamp.getMilliseconds();
 
         if (start > now) {
-          textString += `starts in \`${humanizeMilliseconds(start - now)}\``;
+          textString += message.language.get("EVENTS_ENDED_IN", humanizeMilliseconds(start - now));
         } else if (end > now) {
-          textString += `ends in \`${humanizeMilliseconds(end - now)}\``;
+          textString += message.language.get("EVENTS_ENDED_IN", humanizeMilliseconds(end - now));
         } else {
-          textString += `ended \`${humanizeMilliseconds(now - end)}\` ago.`;
+          textString += message.language.get("EVENTS_ENDED_IN", humanizeMilliseconds(now - end));
         }
 
         return textString;

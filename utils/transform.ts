@@ -14,3 +14,14 @@ export function humanizeMilliseconds(value: number) {
 
   return `${dayString}${hourString}${minuteString}${secondString}`;
 }
+
+export function calculateNextTimestamp(interval: number, timestamp: number, now = Date.now()) {
+  if (timestamp < now) {
+    const multiple = Math.floor((now - timestamp) / interval);
+    if (multiple > 0) timestamp = timestamp + interval * multiple;
+
+    if (timestamp < now) return timestamp + interval;
+    return timestamp;
+  }
+  return timestamp;
+}
