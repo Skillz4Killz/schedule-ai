@@ -2,6 +2,7 @@ import { Inhibitor, InhibitorStore } from "klasa";
 import { RateLimitManager } from "@klasa/ratelimits";
 
 import type { Message } from "@klasa/core";
+import { delayedDelete } from "../utils/klasa";
 
 export default class extends Inhibitor {
   private readonly slowmode: RateLimitManager;
@@ -25,7 +26,7 @@ export default class extends Inhibitor {
     } catch (err) {
       if (this.aggressive) rateLimit.resetTime();
       // Delete the message to prevent spam commands from cloggin a channel
-      if (message.deletable) message.delete({ });
+      delayedDelete(message, 2, message.language.get('SLOWMODE_SPAM_CLEAR', message.author.tag))
       throw true;
     }
   }

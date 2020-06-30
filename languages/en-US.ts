@@ -4,6 +4,10 @@ export default class extends Language {
   language = {
     DEFAULT: (key: string) => `The key ${key} has not been translated yet.`,
 
+    // Slowmode
+    SLOWMODE_SPAM_CLEAR: (username: string) =>
+      `${username} was spamming commands. Auto-deleting to clear spam in your server.`,
+
     // Remind Command
     REMIND_NEED_TIME:
       "You did not provide the time to start. Please try again and provide a time to start such as: 5m or 4d3h2m",
