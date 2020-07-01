@@ -16,9 +16,9 @@ export default class extends Command {
     console.log(reminder?.userID, message.member?.guild.ownerID, message.author.id);
     // If the creator of the reminder is someone else they should not be deleted. Owners of a guild can however override and delete a reminder on their server.
     if (![reminder?.userID, message.member?.guild.ownerID].includes(message.author.id))
-		return sendErrorResponse(message.channel.id, message.language.get("REMIND_OTHER_USER", id));
+      return sendErrorResponse(message.channel.id, message.language.get("REMIND_OTHER_USER", id));
 
-		if (!reminder) return sendErrorResponse(message.channel.id, message.language.get("REMIND_NOT_FOUND", id))
+    if (!reminder) return sendErrorResponse(message.channel.id, message.language.get("REMIND_NOT_FOUND", id));
 
     sendSuccessResponse(message.channel.id, message.language.get("REMIND_DELETED", id));
     await prisma.reminders.delete({ where: { id, userID: message.author.id } });

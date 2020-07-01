@@ -6,6 +6,8 @@ import { sendMessage } from "../utils/responses";
 import { calculateNextTimestamp } from "../utils/transform";
 
 export default class extends Task {
+  requiredPerms = [PermissionsFlags.ViewChannel, PermissionsFlags.SendMessages, PermissionsFlags.EmbedLinks];
+
   async run() {
     const reminders = await prisma.reminders.findMany({ where: { timestamp: { lte: new Date() } } });
     this.client.emit("debug", `[Task] Processing ${reminders.length} reminders!`);
@@ -18,12 +20,7 @@ export default class extends Task {
       if (!botMember) return;
 
       const perms = channel.permissionsFor(botMember);
-      if (
-        ![PermissionsFlags.ViewChannel, PermissionsFlags.SendMessages, PermissionsFlags.EmbedLinks].every((perm) =>
-          perms.has(perm)
-        )
-      )
-        return;
+      if (!this.requiredPerms.every((perm) => perms.has(perm))) return;
 
       const member = await fetchMember(channel.guild, reminder.userID);
       // Member is not in the guild, remove the reminder
@@ -54,6 +51,4 @@ export default class extends Task {
       return prisma.reminders.update({ where: { id: reminder.id }, data: { timestamp: new Date(newTimestamp) } });
     });
   }
-
-
 }

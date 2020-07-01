@@ -16,11 +16,7 @@ export default class extends Command {
     const events = await prisma.events.findMany({ where: { guildID: message.guild?.id } });
 
     // If there are no events available
-    if (!events.length)
-      return sendErrorResponse(
-        message.channel.id,
-        message.language.get("EVENTS_NONE")
-      );
+    if (!events.length) return sendErrorResponse(message.channel.id, message.language.get("EVENTS_NONE"));
 
     this.sendEventList(message, events);
     return message.responses;
@@ -32,10 +28,10 @@ export default class extends Command {
     // Splice will remove from the events array
     embed.setDescription(this.listEvents(message, events.splice(0, 12)));
     // Sends the message to the user
-    sendMessage(message.channel.id, { embed })
+    sendMessage(message.channel.id, { embed });
 
     // If anything is left, it will rerun with remaining events
-    if (events.length) this.sendEventList(message, events)
+    if (events.length) this.sendEventList(message, events);
   }
 
   listEvents(message: Message, events: Events[]) {

@@ -26,7 +26,7 @@ export default class extends Inhibitor {
     } catch (err) {
       if (this.aggressive) rateLimit.resetTime();
       // Delete the message to prevent spam commands from cloggin a channel
-      delayedDelete(message, 2, message.language.get('SLOWMODE_SPAM_CLEAR', message.author.tag))
+      delayedDelete(message, 2, message.language.get("SLOWMODE_SPAM_CLEAR", message.author.tag));
       throw true;
     }
   }

@@ -13,7 +13,7 @@ export const client = new KlasaClient({
     editing: true,
     messageLifetime: 600000,
     slowmode: 2000,
-    slowmodeAggressive: true
+    slowmodeAggressive: true,
   },
   rest: {
     offset: 0,
