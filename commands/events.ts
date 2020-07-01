@@ -1,7 +1,6 @@
 import { Message, Embed } from "@klasa/core";
 import { Command } from "klasa";
 import { prisma } from "..";
-import { ChannelType } from "@klasa/dapi-types";
 import { sendErrorResponse, sendMessage } from "../utils/responses";
 import { Events } from "@prisma/client";
 import { humanizeMilliseconds } from "../utils/transform";
@@ -9,7 +8,6 @@ import { displayAvatarURL } from "../utils/klasa";
 
 export default class extends Command {
   aliases = ["e"];
-  runIn = [ChannelType.GuildText, ChannelType.GuildNews];
 
   async run(message: Message) {
     // Guild ID will be available from the `runIn` prop
