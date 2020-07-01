@@ -29,5 +29,17 @@ export default class extends Language {
     EVENTS_STARTS_IN: (time: number) => `starts in \`${time}\``,
     EVENTS_ENDS_IN: (time: number) => `ends in \`${time}\``,
     EVENTS_ENDED: (time: number) => `ended \`${time}\` ago`,
+
+    // General Events
+    EVENT_CREATE_TITLE: "**Step 1:** What would you like to set as the title of this event?",
+    EVENT_CREATE_DESC:
+      "Awesome let's create an amazing event for you. What would you like to call this event? The title of the event is a short description in regards to what the game is event is about.",
+    EVENT_CREATE_QUIT: "Quit the event creation. To create a new event, please use the command again.",
+
+    // General Menu
+    FOOTER_QUIT: "Type quit to cancel anytime",
+    QUIT: "quit",
+    QNA_SPAM_CLEAN: (username: string) =>
+      `${username} is responding to a QNA Session. Auto-deleting to clear spam in your server.`,
   };
 }
