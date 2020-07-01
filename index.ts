@@ -34,6 +34,7 @@ export const client = new KlasaClient({
         usageDelim: " ",
         promptLimit: Infinity,
         runIn: [ChannelType.GuildNews, ChannelType.GuildText],
+        cooldown: 3000
       },
     },
   },
