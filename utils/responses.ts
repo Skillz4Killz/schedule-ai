@@ -1,5 +1,6 @@
 import { MessageData, SplitOptions, isTextBasedChannel } from "@klasa/core";
 import { client } from "../index";
+import { shortenString } from './transform';
 
 export async function sendMessage(channelID: string, data: MessageData, options?: SplitOptions) {
   const channel = client.channels.get(channelID);
@@ -15,5 +16,5 @@ export function sendErrorResponse(channelID: string, text: string) {
 }
 
 export function sendSuccessResponse(channelID: string, text: string) {
-  return sendMessage(channelID, { content: `<a:success:664865672559591439> ${text}`.substring(0, 2000) });
+  return sendMessage(channelID, { content: shortenString(`<a:success:664865672559591439> ${text}`, 2000) });
 }

@@ -25,3 +25,7 @@ export function calculateNextTimestamp(interval: number, timestamp: number, now 
   }
   return timestamp;
 }
+
+export const shortenString = (text: string, length: number) => {
+  return text.length > length ? text.substring(0, length - 3) + "..." : text;
+};
